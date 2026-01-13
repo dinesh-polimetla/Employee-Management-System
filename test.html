@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HCL Employee Portal</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .form-box { background: #f0f0f0; padding: 20px; border-radius: 8px; }
+        input { padding: 10px; margin: 5px; }
+        button { padding: 10px 20px; background: green; color: white; border: none; cursor: pointer; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 HCL Employee Management System</h1>
+
+    <div class="form-box">
+        <h3>Hire New Employee</h3>
+        <input type="text" id="empName" placeholder="Name">
+        <input type="text" id="empDept" placeholder="Department">
+        <input type="number" id="empSal" placeholder="Salary">
+        <button onclick="hireEmployee()">HIRE NOW</button>
+        <p id="output" style="color: green; font-weight: bold;"></p>
+    </div>
+
+    <h3>Current Employees</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTable">
+            </tbody>
+    </table>
+
+    <script>
+        const API_URL = 'http://localhost:8080/employees';
+
+        // 1. Function to HIRE (POST)
+        async function hireEmployee() {
+            const data = {
+                name: document.getElementById("empName").value,
+                department: document.getElementById("empDept").value,
+                salary: document.getElementById("empSal").value
+            };
+
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            document.getElementById("output").innerText = "Saved successfully!";
+            loadEmployees(); // Reload the list instantly
+        }
+
+        // 2. Function to LOAD (GET)
+        async function loadEmployees() {
+            const response = await fetch(API_URL);
+            const employees = await response.json();
+
+            let tableRows = "";
+            employees.forEach(emp => {
+                tableRows += `
+                    <tr>
+                        <td>${emp.id}</td>
+                        <td>${emp.name}</td>
+                        <td>${emp.department}</td>
+                        <td>${emp.salary}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById("employeeTable").innerHTML = tableRows;
+        }
+
+        // Load data when page opens
+        loadEmployees();
+    </script>
+
+</body>
+</html>
