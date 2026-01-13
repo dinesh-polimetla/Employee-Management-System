@@ -1,0 +1,12 @@
+### 1. Get all employees (The GET Request)
+GET http://localhost:8080/employees
+
+### 2. Add a new employee (The POST Request)
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "name": "Arjun",
+  "department": "Finance",
+  "salary": 55000.0
+}
